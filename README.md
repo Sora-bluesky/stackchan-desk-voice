@@ -21,7 +21,6 @@ This is not an official M5Stack or Stack-chan project. See [Disclaimer](#disclai
 - During the idle look-around moves, the mic sends silence from shortly before the servos move until shortly after they stop, so motor noise stays out of the call. The USB stream keeps running. The position hold at boot and the re-hold after you move the head by hand are not muted.
 - If you push the head by hand, the servo lets go instead of fighting you, then holds the new position.
 - The last few log lines and a status line can be shown on screen. Long-press the top-right corner of the screen for 3 seconds to toggle them.
-- Keep a finger on the screen or the head while it boots and it starts in safe mode: a diagnostics screen without USB audio, with a speaker tone test, a mic level meter and an I2C chip check.
 - If the last reset was a brownout, it starts with the volume capped at 50% and the servos off.
 
 ## Requirements
@@ -145,6 +144,7 @@ Set these with `idf.py menuconfig` under "StackChan desk voice firmware", or add
 - The script tells whether a call is active by looking at the app window. A minimized window reads as "no call", so keep it open.
 - The script finds buttons by colour and shape, so a UI update in the app can break it. The saved position (Ctrl+Alt+Shift+G) is the fallback.
 - The face is not an official Stack-chan or M5Stack design. It was drawn in code for this project.
+- The code has a diagnostics safe mode (speaker tone test, mic level meter, I2C chip check), meant to start when a finger stays on the screen or head during boot. In testing it could not be entered yet, so do not rely on it.
 
 ## Working with an AI agent
 
