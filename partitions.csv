@@ -1,0 +1,6 @@
+# Name,   Type, SubType, Offset,   Size
+# nvs is kept at the SAME place/size as the factory StackChan firmware (0x9000/0x4000)
+# so that flashing app-only (see README) keeps factory NVS (servo zero calibration etc.).
+nvs,      data, nvs,     0x9000,   0x4000
+phy_init, data, phy,     0xf000,   0x1000
+factory,  app,  factory, 0x20000,  0x4f0000

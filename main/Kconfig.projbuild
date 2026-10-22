@@ -1,0 +1,83 @@
+menu "StackChan desk voice firmware"
+
+    config STACKCHAN_USB_HID
+        bool "USB composite: UAC + HID keyboard (call toggle key)"
+        default y
+        select USB_DEVICE_UAC_AS_PART
+        help
+            Build a TinyUSB composite device (UAC2 mic+speaker + HID keyboard).
+            Uses usb_device_uac with USB_DEVICE_UAC_AS_PART=y and our own
+            descriptors (main/usb/). If Windows does not enumerate the composite
+            device, disable this to get the plain UAC-only device; the call toggle
+            then only changes the face (no key is sent).
+
+    config STACKCHAN_HID_KEYCODE
+        hex "HID keycode sent on call toggle (0x68 = F13)"
+        default 0x68
+        depends on STACKCHAN_USB_HID
+
+    config STACKCHAN_HID_MODIFIER
+        hex "HID modifier bits for the key (0=none, 0x01=LCtrl, 0x02=LShift, 0x04=LAlt)"
+        default 0x00
+        depends on STACKCHAN_USB_HID
+
+    config STACKCHAN_VOLUME_CAP
+        int "Speaker volume cap (percent of codec volume)"
+        range 10 100
+        default 100
+
+    config STACKCHAN_SPK_BOOST_DB
+        int "USB speaker boost (dB)"
+        range 0 15
+        default 0
+        help
+            Boost USB speaker PCM with a peak limiter; 0 bypasses processing.
+
+    config STACKCHAN_MIC_GAIN_DB
+        int "ES7210 mic gain (dB)"
+        range 0 37
+        default 30
+
+    config STACKCHAN_SERVO
+        bool "Enable SCS0009 neck servos (idle look-around)"
+        default n
+        help
+            Off by default here so a first flash brings up only the face and USB audio.
+            Enabled in sdkconfig.defaults (the eyes lead the head).
+
+    config STACKCHAN_SERVO_LOOK_MIN_S
+        int "Idle look-around min interval (s)"
+        default 20
+
+    config STACKCHAN_SERVO_LOOK_MAX_S
+        int "Idle look-around max interval (s)"
+        default 30
+
+    config STACKCHAN_MIC_MUTE_PRE_MS
+        int "Mic mute before servo move (ms)"
+        default 80
+
+    config STACKCHAN_MIC_MUTE_POST_MS
+        int "Mic mute after servo stop (ms)"
+        default 200
+
+    config STACKCHAN_AEC
+        bool "ESP-SR AEC (hook only; not implemented yet)"
+        default n
+        help
+            Reserved. Only the aec_process() hook exists; it passes the mic
+            through unchanged. Possible future path: 48k->16k, ESP-SR AEC (SR_LOW_COST), 16k->48k.
+
+    config STACKCHAN_DEBUG_OVERLAY
+        bool "Show log overlay (last 4 lines) on screen at boot"
+        default y
+
+    config STACKCHAN_SPK_DBFS_ON
+        int "Speaking threshold (dBFS, negative)"
+        default -45
+
+    config STACKCHAN_VAD_MARGIN_DB
+        int "Mic VAD margin over noise floor (dB)"
+        default 12
+
+endmenu
